@@ -1,11 +1,11 @@
 import { getCurrentTime } from "../../utils/date-utils.js";
+import { sendRespone } from "../../utils/response-utils.js";
 import { addARecord, addZone, getARecords } from "./dns-dao.js";
 
 const createZoneHandler = async (req, res, logger) => {
   const zoneObj = req.body;
 
-  logger.info(`[${getCurrentTime()}] PUT /zone : Status 200`);
-  res.status(200).send(await addZone(zoneObj));
+  sendRespone(req, res, logger, "info", result);
 };
 
 const addARecordHandler = async (req, res, logger) => {
@@ -15,11 +15,9 @@ const addARecordHandler = async (req, res, logger) => {
 
   const result = await addARecord(zoneName, aName, ip);
   if (result !== null) {
-    logger.info(`[${getCurrentTime()}] POST /a-record : Status 200`);
-    res.status(200).send(result);
+    sendRespone(req, res, logger, "info", 200, result);
   } else {
-    logger.error(`[${getCurrentTime()}] POST /a-record : Status 406`);
-    res.status(406).send({
+    sendRespone(req, res, logger, "error", 406, {
       status: `Zone '${zoneName}' not found or A name '${aName}' is already added!`,
     });
   }
@@ -30,11 +28,9 @@ const getARecordsHandler = async (req, res, logger) => {
 
   const result = await getARecords(zoneName);
   if (result !== null) {
-    logger.info(`[${getCurrentTime()}] GET /get-a-records : Status 200`);
-    res.status(200).send(result.a_records);
+    sendRespone(req, res, logger, "info", 200, result.a_records);
   } else {
-    logger.error(`[${getCurrentTime()}] GET /get-a-records : Status 404`);
-    res.status(404).send({
+    sendRespone(req, res, logger, "error", 404, {
       status: `Zone '${zoneName}' not found`,
     });
   }
