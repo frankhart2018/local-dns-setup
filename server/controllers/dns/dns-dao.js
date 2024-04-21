@@ -26,3 +26,16 @@ export const addARecord = (zoneName, aName, ip) => {
 export const getARecords = (zoneName) => {
   return dnsModel.findOne({ name: zoneName });
 };
+
+export const deleteARecord = (zoneName, aName) => {
+  const query = { name: zoneName };
+  const update = {
+    $pull: {
+      a_records: {
+        name: aName,
+      },
+    },
+  };
+  const options = { new: true };
+  return dnsModel.findOneAndUpdate(query, update, options);
+};
