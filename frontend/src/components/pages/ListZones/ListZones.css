@@ -1,0 +1,9 @@
+.row {
+  display: inline-flex;
+  column-width: 900vh;
+}
+
+.card {
+  padding: 20px;
+  margin: 10px;
+}

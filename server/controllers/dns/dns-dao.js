@@ -9,6 +9,10 @@ export const addZone = (zoneObj) => {
   return dnsModel.findOneAndUpdate(query, update, options);
 };
 
+export const getAllZones = () => {
+  return dnsModel.find({});
+};
+
 export const addARecord = (zoneName, aName, ip) => {
   const query = { name: zoneName, "a_records.name": { $ne: aName } };
   const update = {
