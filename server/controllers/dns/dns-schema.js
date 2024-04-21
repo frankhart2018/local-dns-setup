@@ -23,7 +23,7 @@ const A_record = new mongoose.Schema({
 
 const schema = new mongoose.Schema(
   {
-    name: String,
+    name: { type: String, unique: true },
     type: String,
     soa: SOA,
     ip: IP,
@@ -31,7 +31,7 @@ const schema = new mongoose.Schema(
   },
   {
     collection: "zones",
-  },
+  }
 );
 
 export default schema;
