@@ -18,8 +18,8 @@ const addARecordHandler = async (req, res, logger) => {
     logger.info(`[${getCurrentTime()}] POST /add-a-record : Status 200`);
     res.status(200).send(result);
   } else {
-    logger.error(`[${getCurrentTime()}] POST /add-a-record : Status 404`);
-    res.status(404).send({
+    logger.error(`[${getCurrentTime()}] POST /add-a-record : Status 406`);
+    res.status(406).send({
       status: `Zone '${zoneName}' not found or A name '${aName}' is already added!`,
     });
   }
