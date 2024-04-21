@@ -22,3 +22,7 @@ export const addARecord = (zoneName, aName, ip) => {
   const options = { new: true };
   return dnsModel.findOneAndUpdate(query, update, options);
 };
+
+export const getARecords = (zoneName) => {
+  return dnsModel.findOne({ name: zoneName });
+};

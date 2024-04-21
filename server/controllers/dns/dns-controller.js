@@ -1,5 +1,5 @@
 import { getCurrentTime } from "../../utils/date-utils.js";
-import { addARecord, addZone } from "./dns-dao.js";
+import { addARecord, addZone, getARecords } from "./dns-dao.js";
 
 const createZoneHandler = async (req, res, logger) => {
   const zoneObj = req.body;
@@ -25,9 +25,27 @@ const addARecordHandler = async (req, res, logger) => {
   }
 };
 
+const getARecordsHandler = async (req, res, logger) => {
+  const { zoneName } = req.params;
+
+  const result = await getARecords(zoneName);
+  if (result !== null) {
+    logger.info(`[${getCurrentTime()}] GET /get-a-records : Status 200`);
+    res.status(200).send(result.a_records);
+  } else {
+    logger.error(`[${getCurrentTime()}] GET /get-a-records : Status 404`);
+    res.status(404).send({
+      status: `Zone '${zoneName}' not found`,
+    });
+  }
+};
+
 const DnsController = (app, logger) => {
   app.put("/create-zone", (req, res) => createZoneHandler(req, res, logger));
   app.post("/add-a-record", (req, res) => addARecordHandler(req, res, logger));
+  app.get("/a-records/:zoneName", (req, res) =>
+    getARecordsHandler(req, res, logger)
+  );
 };
 
 export default DnsController;
