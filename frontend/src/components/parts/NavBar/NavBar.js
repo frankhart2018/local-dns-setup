@@ -31,6 +31,15 @@ const NavBar = () => {
         >
           List Zones
         </button>
+
+        <button
+          className="nav-button"
+          onClick={() => {
+            window.location.href = "/create-zone";
+          }}
+        >
+          Add Zone
+        </button>
       </div>
     </nav>
   );

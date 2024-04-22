@@ -4,6 +4,7 @@
   background: none;
   border: 2px solid white;
   border-radius: 5px;
+  margin: 0 10px;
 }
 
 .nav-button:hover {
