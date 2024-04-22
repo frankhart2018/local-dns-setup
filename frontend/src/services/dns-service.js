@@ -23,3 +23,12 @@ export const deleteARecord = async (zoneName, aName) => {
   );
   return response;
 };
+
+export const addARecord = async (zoneName, aName, ip) => {
+  const response = await axios.post(`${REACT_APP_API_BASE}/a-record`, {
+    zoneName,
+    aName,
+    ip,
+  });
+  return response;
+};

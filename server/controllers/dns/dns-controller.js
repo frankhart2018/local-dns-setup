@@ -30,7 +30,7 @@ const addARecordHandler = async (req, res, logger) => {
     sendRespone(req, res, logger, "info", 200, result);
   } else {
     sendRespone(req, res, logger, "error", 406, {
-      status: `Zone '${zoneName}' not found or A name '${aName}' is already added!`,
+      error: `Zone '${zoneName}' not found or A name '${aName}' is already added!`,
     });
   }
 };

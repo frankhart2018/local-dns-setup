@@ -34,3 +34,14 @@ export const deleteARecordThunk = createAsyncThunk(
     ]);
   },
 );
+
+export const addARecordThunk = createAsyncThunk(
+  "dns/addARecord",
+  async (payload) => {
+    return await callServiceOrReturnError(dnsService.addARecord, [
+      payload.zoneName,
+      payload.aName,
+      payload.ip,
+    ]);
+  },
+);

@@ -1,5 +1,7 @@
 import {
   Button,
+  Input,
+  InputLabel,
   Paper,
   Table,
   TableBody,
@@ -7,12 +9,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   styled,
   tableCellClasses,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  addARecordThunk,
   deleteARecordThunk,
   getARecordsThunk,
 } from "../../../services/dns-thunk";
@@ -43,6 +47,9 @@ const ListANames = () => {
   const pathName = window.location.pathname;
   const zoneName = pathName.split("/")[2];
 
+  const [aName, setAName] = useState("");
+  const [ip, setIp] = useState("");
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -57,9 +64,37 @@ const ListANames = () => {
     return `${ipObject.part_0}.${ipObject.part_1}.${ipObject.part_2}.${ipObject.part_3}`;
   };
 
+  const ipToObject = (ipString) => {
+    const parts = ipString.split(".");
+    return {
+      part_0: parts[0],
+      part_1: parts[1],
+      part_2: parts[2],
+      part_3: parts[3],
+    };
+  };
+
   const deleteAName = (aName) => {
     dispatch(deleteARecordThunk({ zoneName, aName }));
     window.location.reload();
+  };
+
+  const addANameHandler = () => {
+    const ipRegex = new RegExp(
+      "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",
+    );
+    if (!ipRegex.test(ip)) {
+      alert("Invalid IP address");
+      return;
+    }
+
+    dispatch(
+      addARecordThunk({
+        zoneName,
+        aName,
+        ip: ipToObject(ip),
+      }),
+    );
   };
 
   return (
@@ -69,6 +104,29 @@ const ListANames = () => {
         margin: "10px",
       }}
     >
+      <div>
+        <TextField
+          id="a-name"
+          label="A Name"
+          variant="outlined"
+          value={aName}
+          onChange={(e) => setAName(e.target.value)}
+          style={{ marginRight: "10px" }}
+          autoFocus
+        />
+        <TextField
+          id="ip"
+          label="IP"
+          variant="outlined"
+          value={ip}
+          onChange={(e) => setIp(e.target.value)}
+          style={{ marginRight: "10px" }}
+        />
+        <Button variant="contained" color="primary" onClick={addANameHandler}>
+          Add A Name
+        </Button>
+      </div>
+      <br />
       {aRecords !== null && aRecords.length > 0 ? (
         <>
           <TableContainer component={Paper}>
