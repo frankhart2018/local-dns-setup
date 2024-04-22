@@ -6,6 +6,7 @@ import dnsReducer from "./reducers/dns-reducer";
 import { VERSION } from "./utils/version";
 import { Provider } from "react-redux";
 import ListANames from "./components/pages/ListANames/ListANames";
+import CreateZone from "./components/pages/CreateZone/CreateZone";
 
 const store = configureStore({
   reducer: {
@@ -25,6 +26,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<ListZones />} />
         <Route path="/a-names/:zoneName" element={<ListANames />} />
+        <Route path="/create-zone" element={<CreateZone />} />
       </Routes>
     </Provider>
   );
