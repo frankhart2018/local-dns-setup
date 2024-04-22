@@ -37,3 +37,8 @@ export const addZone = async (zoneObj) => {
   const response = await axios.put(`${REACT_APP_API_BASE}/zone`, zoneObj);
   return response;
 };
+
+export const deleteZone = async (zoneName) => {
+  const response = await axios.delete(`${REACT_APP_API_BASE}/zone/${zoneName}`);
+  return response;
+};

@@ -1,6 +1,8 @@
 import React from "react";
 
 import { Button, CardActions, CardContent, Typography } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { deleteZoneThunk } from "../../../services/dns-thunk";
 
 const CardContents = ({ zoneObj }) => {
   const ipToString = (ipObject) => {
@@ -9,6 +11,21 @@ const CardContents = ({ zoneObj }) => {
 
   const redirectToANamesPage = () => {
     window.location.href = `/a-names/${zoneObj.name}`;
+  };
+
+  const dispatch = useDispatch();
+
+  const deleteZone = () => {
+    if (window.confirm("Are you sure you want to delete this zone?")) {
+      dispatch(
+        deleteZoneThunk({
+          zoneName: zoneObj.name,
+        }),
+      );
+      window.location.reload();
+    } else {
+      alert("Zone deletion cancelled");
+    }
   };
 
   return (
@@ -56,6 +73,15 @@ const CardContents = ({ zoneObj }) => {
       <CardActions>
         <Button variant="outlined" size="small" onClick={redirectToANamesPage}>
           Check A Names
+        </Button>
+
+        <Button
+          variant="outlined"
+          color="error"
+          size="small"
+          onClick={deleteZone}
+        >
+          Delete
         </Button>
       </CardActions>
     </React.Fragment>

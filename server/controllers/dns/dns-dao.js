@@ -9,6 +9,12 @@ export const addZone = (zoneObj) => {
   return dnsModel.findOneAndUpdate(query, update, options);
 };
 
+export const deleteZone = (zoneName) => {
+  return dnsModel.findOneAndDelete({
+    name: zoneName,
+  });
+};
+
 export const getAllZones = () => {
   return dnsModel.find({}, { a_records: 0 });
 };

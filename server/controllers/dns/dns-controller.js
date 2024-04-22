@@ -4,6 +4,7 @@ import {
   addARecord,
   addZone,
   deleteARecord,
+  deleteZone,
   getARecords,
   getAllZones,
 } from "./dns-dao.js";
@@ -13,6 +14,19 @@ const createZoneHandler = async (req, res, logger) => {
 
   const result = await addZone(zoneObj);
   sendRespone(req, res, logger, "info", 200, result);
+};
+
+const deleteZoneHandler = async (req, res, logger) => {
+  const { zoneName } = req.params;
+
+  const result = await deleteZone(zoneName);
+  if (result !== null) {
+    sendRespone(req, res, logger, "info", 200, result);
+  } else {
+    sendRespone(req, res, logger, "error", 404, {
+      error: `Zone '${zoneName}' not found`,
+    });
+  }
 };
 
 const getAllZonesHandler = async (req, res, logger) => {
@@ -43,7 +57,7 @@ const getARecordsHandler = async (req, res, logger) => {
     sendRespone(req, res, logger, "info", 200, result.a_records);
   } else {
     sendRespone(req, res, logger, "error", 404, {
-      status: `Zone '${zoneName}' not found`,
+      error: `Zone '${zoneName}' not found`,
     });
   }
 };
@@ -59,7 +73,7 @@ const deleteARecordHandler = async (req, res, logger) => {
     sendRespone(req, res, logger, "info", 200, result);
   } else {
     sendRespone(req, res, logger, "error", 406, {
-      status: `Zone '${zoneName}' not found!`,
+      error: `Zone '${zoneName}' not found!`,
     });
   }
 };
@@ -69,6 +83,9 @@ const DnsController = (app, logger) => {
   // ZONE
   //////////////////////////////////////////
   app.put("/zone", (req, res) => createZoneHandler(req, res, logger));
+  app.delete("/zone/:zoneName", (req, res) =>
+    deleteZoneHandler(req, res, logger),
+  );
   app.get("/zones", (req, res) => getAllZonesHandler(req, res, logger));
 
   //////////////////////////////////////////
