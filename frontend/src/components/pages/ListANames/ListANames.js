@@ -18,6 +18,7 @@ import {
   deleteARecordThunk,
   getARecordsThunk,
 } from "../../../services/dns-thunk";
+import NavBar from "../../parts/NavBar/NavBar";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -96,73 +97,76 @@ const ListANames = () => {
   };
 
   return (
-    <div
-      className="container"
-      style={{
-        margin: "10px",
-      }}
-    >
-      <div>
-        <TextField
-          id="a-name"
-          label="A Name"
-          variant="outlined"
-          value={aName}
-          onChange={(e) => setAName(e.target.value)}
-          style={{ marginRight: "10px" }}
-          autoFocus
-        />
-        <TextField
-          id="ip"
-          label="IP"
-          variant="outlined"
-          value={ip}
-          onChange={(e) => setIp(e.target.value)}
-          style={{ marginRight: "10px" }}
-        />
-        <Button variant="contained" color="primary" onClick={addANameHandler}>
-          Add A Name
-        </Button>
+    <div>
+      <NavBar />
+
+      <div
+        style={{
+          margin: "10px",
+        }}
+      >
+        <div>
+          <TextField
+            id="a-name"
+            label="A Name"
+            variant="outlined"
+            value={aName}
+            onChange={(e) => setAName(e.target.value)}
+            style={{ marginRight: "10px" }}
+            autoFocus
+          />
+          <TextField
+            id="ip"
+            label="IP"
+            variant="outlined"
+            value={ip}
+            onChange={(e) => setIp(e.target.value)}
+            style={{ marginRight: "10px" }}
+          />
+          <Button variant="contained" color="primary" onClick={addANameHandler}>
+            Add A Name
+          </Button>
+        </div>
+        <br />
+        {aRecords !== null && aRecords.length > 0 ? (
+          <>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 100 }} aria-label="customized table">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell>A Name</StyledTableCell>
+                    <StyledTableCell align="right">IP</StyledTableCell>
+                    <StyledTableCell align="right">Actions</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {aRecords.map((aRecord) => (
+                    <StyledTableRow key={aRecord.name}>
+                      <StyledTableCell component="th" scope="row">
+                        {aRecord.name}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {ipToString(aRecord.ip)}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={() => deleteAName(aRecord.name)}
+                        >
+                          Delete
+                        </Button>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
+        ) : (
+          <div>No A Records found for this zone.</div>
+        )}
       </div>
-      <br />
-      {aRecords !== null && aRecords.length > 0 ? (
-        <>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 100 }} aria-label="customized table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>A Name</StyledTableCell>
-                  <StyledTableCell align="right">IP</StyledTableCell>
-                  <StyledTableCell align="right">Actions</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {aRecords.map((aRecord) => (
-                  <StyledTableRow key={aRecord.name}>
-                    <StyledTableCell component="th" scope="row">
-                      {aRecord.name}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {ipToString(aRecord.ip)}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      <Button
-                        variant="contained"
-                        color="error"
-                        onClick={() => deleteAName(aRecord.name)}
-                      >
-                        Delete
-                      </Button>
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </>
-      ) : (
-        <div>No A Records found for this zone.</div>
-      )}
     </div>
   );
 };
