@@ -24,3 +24,13 @@ export const getARecordsThunk = createAsyncThunk(
     ]);
   },
 );
+
+export const deleteARecordThunk = createAsyncThunk(
+  "dns/deleteARecord",
+  async (payload) => {
+    return await callServiceOrReturnError(dnsService.deleteARecord, [
+      payload.zoneName,
+      payload.aName,
+    ]);
+  },
+);

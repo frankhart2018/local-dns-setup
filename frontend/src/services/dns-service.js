@@ -13,3 +13,13 @@ export const getARecords = async (zoneName) => {
   );
   return response;
 };
+
+export const deleteARecord = async (zoneName, aName) => {
+  const response = await axios.delete(
+    `${REACT_APP_API_BASE}/a-record/${zoneName}`,
+    {
+      data: { aName },
+    },
+  );
+  return response;
+};

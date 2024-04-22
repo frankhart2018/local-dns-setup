@@ -1,4 +1,5 @@
 import {
+  Button,
   Paper,
   Table,
   TableBody,
@@ -11,7 +12,10 @@ import {
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getARecordsThunk } from "../../../services/dns-thunk";
+import {
+  deleteARecordThunk,
+  getARecordsThunk,
+} from "../../../services/dns-thunk";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -53,6 +57,11 @@ const ListANames = () => {
     return `${ipObject.part_0}.${ipObject.part_1}.${ipObject.part_2}.${ipObject.part_3}`;
   };
 
+  const deleteAName = (aName) => {
+    dispatch(deleteARecordThunk({ zoneName, aName }));
+    window.location.reload();
+  };
+
   return (
     <div
       className="container"
@@ -68,6 +77,7 @@ const ListANames = () => {
                 <TableRow>
                   <StyledTableCell>A Name</StyledTableCell>
                   <StyledTableCell align="right">IP</StyledTableCell>
+                  <StyledTableCell align="right">Actions</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -78,6 +88,15 @@ const ListANames = () => {
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       {ipToString(aRecord.ip)}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => deleteAName(aRecord.name)}
+                      >
+                        Delete
+                      </Button>
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
