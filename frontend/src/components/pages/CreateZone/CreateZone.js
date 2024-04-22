@@ -1,6 +1,8 @@
 import { Button, TextField } from "@mui/material";
 import React, { useState } from "react";
 import NavBar from "../../parts/NavBar/NavBar";
+import { useDispatch } from "react-redux";
+import { addZoneThunk } from "../../../services/dns-thunk";
 
 const CreateZone = () => {
   const [zone, setZone] = useState({
@@ -22,6 +24,8 @@ const CreateZone = () => {
     },
   });
   const [ip, setIp] = useState("");
+
+  const dispatch = useDispatch();
 
   const addZoneHandler = () => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -48,8 +52,16 @@ const CreateZone = () => {
         part_3: ipObject[3],
       },
     });
+    const zoneCopy = { ...zone };
+    zoneCopy.ip = {
+      part_0: ipObject[0],
+      part_1: ipObject[1],
+      part_2: ipObject[2],
+      part_3: ipObject[3],
+    };
 
-    console.log(zone);
+    dispatch(addZoneThunk(zoneCopy));
+    window.location.href = "/";
   };
 
   return (

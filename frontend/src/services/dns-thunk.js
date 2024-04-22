@@ -45,3 +45,7 @@ export const addARecordThunk = createAsyncThunk(
     ]);
   },
 );
+
+export const addZoneThunk = createAsyncThunk("dns/addZone", async (payload) => {
+  return await callServiceOrReturnError(dnsService.addZone, [payload]);
+});

@@ -32,3 +32,8 @@ export const addARecord = async (zoneName, aName, ip) => {
   });
   return response;
 };
+
+export const addZone = async (zoneObj) => {
+  const response = await axios.put(`${REACT_APP_API_BASE}/zone`, zoneObj);
+  return response;
+};
