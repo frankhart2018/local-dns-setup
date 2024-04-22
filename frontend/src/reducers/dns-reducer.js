@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { getZonesThunk } from "../services/dns-thunk";
+import { getARecordsThunk, getZonesThunk } from "../services/dns-thunk";
 
 const initialState = {
   zones: null,
+  aRecords: null,
 };
 
 const dnsSlice = createSlice({
@@ -16,6 +17,14 @@ const dnsSlice = createSlice({
 
       if ("data" in payload) {
         state.zones = payload.data;
+      }
+    });
+
+    builder.addCase(getARecordsThunk.fulfilled, (state, action) => {
+      const payload = action.payload;
+
+      if ("data" in payload) {
+        state.aRecords = payload.data;
       }
     });
   },

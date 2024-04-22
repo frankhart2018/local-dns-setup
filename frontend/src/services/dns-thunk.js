@@ -15,3 +15,12 @@ const callServiceOrReturnError = async (serviceFn, args = null) => {
 export const getZonesThunk = createAsyncThunk("dns/getZones", async () => {
   return await callServiceOrReturnError(dnsService.getZones);
 });
+
+export const getARecordsThunk = createAsyncThunk(
+  "dns/getARecords",
+  async (payload) => {
+    return await callServiceOrReturnError(dnsService.getARecords, [
+      payload.zoneName,
+    ]);
+  },
+);

@@ -10,7 +10,7 @@ export const addZone = (zoneObj) => {
 };
 
 export const getAllZones = () => {
-  return dnsModel.find({});
+  return dnsModel.find({}, { a_records: 0 });
 };
 
 export const addARecord = (zoneName, aName, ip) => {
