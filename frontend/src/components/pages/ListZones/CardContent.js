@@ -7,6 +7,10 @@ const CardContents = ({ zoneObj }) => {
     return `${ipObject.part_0}.${ipObject.part_1}.${ipObject.part_2}.${ipObject.part_3}`;
   };
 
+  const redirectToANamesPage = () => {
+    window.location.href = `/a-names/${zoneObj.name}`;
+  };
+
   return (
     <React.Fragment>
       <CardContent>
@@ -50,7 +54,7 @@ const CardContents = ({ zoneObj }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button variant="outlined" size="small">
+        <Button variant="outlined" size="small" onClick={redirectToANamesPage}>
           Check A Names
         </Button>
       </CardActions>
