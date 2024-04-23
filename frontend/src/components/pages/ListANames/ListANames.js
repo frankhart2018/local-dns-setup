@@ -17,6 +17,7 @@ import {
   addARecordThunk,
   deleteARecordThunk,
   getARecordsThunk,
+  pingUrlThunk,
 } from "../../../services/dns-thunk";
 import NavBar from "../../parts/NavBar/NavBar";
 
@@ -48,6 +49,7 @@ const ListANames = () => {
 
   const [aName, setAName] = useState("");
   const [ip, setIp] = useState("");
+  const [pingResult, setPingResult] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -56,7 +58,12 @@ const ListANames = () => {
   }, [dispatch, zoneName]);
 
   useEffect(() => {
-    console.log(aRecords);
+    if (aRecords !== null) {
+      setPingResult(aRecords.map((_) => <span style={{
+        color: "#8B8000",
+        fontWeight: "bold"
+      }}>Unknown</span>));
+    }
   }, [aRecords]);
 
   const ipToString = (ipObject) => {
@@ -80,7 +87,7 @@ const ListANames = () => {
 
   const addANameHandler = () => {
     const ipRegex = new RegExp(
-      "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",
+      "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
     );
     if (!ipRegex.test(ip)) {
       alert("Invalid IP address");
@@ -92,8 +99,25 @@ const ListANames = () => {
         zoneName,
         aName,
         ip: ipToObject(ip),
-      }),
+      })
     );
+  };
+
+  const pingUrl = (aName, idx) => {
+    dispatch(pingUrlThunk({
+      url: `${aName}.${zoneName}`
+    })).then((result) => {
+      setPingResult((prev) => {
+        const newPingResult = [...prev];
+        newPingResult[idx] = result.payload.data.resolved ? (
+          <span style={{ color: "green", fontWeight: "bold" }}>Resolved</span>
+        ) : (
+          <span style={{ color: "red", fontWeight: "bold" }}>Not Resolved</span>
+        );
+
+        return newPingResult;
+      });
+    });
   };
 
   return (
@@ -137,10 +161,11 @@ const ListANames = () => {
                     <StyledTableCell>A Name</StyledTableCell>
                     <StyledTableCell align="right">IP</StyledTableCell>
                     <StyledTableCell align="right">Actions</StyledTableCell>
+                    <StyledTableCell align="right">Status</StyledTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {aRecords.map((aRecord) => (
+                  {aRecords.map((aRecord, idx) => (
                     <StyledTableRow key={aRecord.name}>
                       <StyledTableCell component="th" scope="row">
                         {aRecord.name}
@@ -156,6 +181,17 @@ const ListANames = () => {
                         >
                           Delete
                         </Button>
+                        &nbsp;
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => pingUrl(aRecord.name, idx)}
+                        >
+                          Ping
+                        </Button>
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {pingResult[idx]}
                       </StyledTableCell>
                     </StyledTableRow>
                   ))}

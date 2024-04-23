@@ -58,3 +58,10 @@ export const deleteZoneThunk = createAsyncThunk(
     ]);
   },
 );
+
+export const pingUrlThunk = createAsyncThunk(
+  "dns/pingUrl",
+  async (payload) => {
+    return await callServiceOrReturnError(dnsService.pingUrl, [payload.url]);
+  },
+);

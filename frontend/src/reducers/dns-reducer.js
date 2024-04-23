@@ -9,6 +9,7 @@ import {
 const initialState = {
   zones: null,
   aRecords: null,
+  resolutions: [],
 };
 
 const dnsSlice = createSlice({
@@ -28,6 +29,7 @@ const dnsSlice = createSlice({
       const payload = action.payload;
 
       if ("data" in payload) {
+        state.resolutions = [];
         state.aRecords = payload.data;
       }
     });

@@ -42,3 +42,8 @@ export const deleteZone = async (zoneName) => {
   const response = await axios.delete(`${REACT_APP_API_BASE}/zone/${zoneName}`);
   return response;
 };
+
+export const pingUrl = async (url) => {
+  const response = await axios.get(`${REACT_APP_API_BASE}/ping/${url}`);
+  return response;
+}
