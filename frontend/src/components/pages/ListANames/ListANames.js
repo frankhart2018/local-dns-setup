@@ -59,10 +59,18 @@ const ListANames = () => {
 
   useEffect(() => {
     if (aRecords !== null) {
-      setPingResult(aRecords.map((_) => <span style={{
-        color: "#8B8000",
-        fontWeight: "bold"
-      }}>Unknown</span>));
+      setPingResult(
+        aRecords.map((_) => (
+          <span
+            style={{
+              color: "#8B8000",
+              fontWeight: "bold",
+            }}
+          >
+            Unknown
+          </span>
+        ))
+      );
     }
   }, [aRecords]);
 
@@ -109,9 +117,11 @@ const ListANames = () => {
   };
 
   const pingUrl = (aName, idx) => {
-    dispatch(pingUrlThunk({
-      url: `${aName}.${zoneName}`
-    })).then((result) => {
+    dispatch(
+      pingUrlThunk({
+        url: `${aName}.${zoneName}`,
+      })
+    ).then((result) => {
       setPingResult((prev) => {
         const newPingResult = [...prev];
         newPingResult[idx] = result.payload.data.resolved ? (
@@ -121,6 +131,28 @@ const ListANames = () => {
         );
 
         return newPingResult;
+      });
+    });
+  };
+
+  const pingAllHandler = () => {
+    aRecords.forEach((aRecord, idx) => {
+      dispatch(
+        pingUrlThunk({
+          url: `${aRecord.name}.${zoneName}`,
+        })
+      ).then((result) => {
+        setPingResult((prev) => {
+          console.log(result);
+          const newPingResult = [...prev];
+          newPingResult[idx] = result.payload.data.resolved ? (
+            <span style={{ color: "green", fontWeight: "bold" }}>Resolved</span>
+          ) : (
+            <span style={{ color: "red", fontWeight: "bold" }}>Not Resolved</span>
+          );
+
+          return newPingResult;
+        });        
       });
     });
   };
@@ -152,8 +184,16 @@ const ListANames = () => {
             onChange={(e) => setIp(e.target.value)}
             style={{ marginRight: "10px" }}
           />
-          <Button variant="contained" color="primary" onClick={addANameHandler}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={addANameHandler}
+            style={{ marginRight: "10px" }}
+          >
             Add A Name
+          </Button>
+          <Button variant="contained" color="primary" onClick={pingAllHandler}>
+            Ping All
           </Button>
         </div>
         <br />
