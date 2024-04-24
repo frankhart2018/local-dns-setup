@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import {
   addARecordThunk,
+  deployChangesThunk,
   getARecordsThunk,
   getZonesThunk,
 } from "../services/dns-thunk";
@@ -39,6 +40,16 @@ const dnsSlice = createSlice({
 
       if ("data" in payload) {
         window.location.reload();
+      } else {
+        alert(payload.response.data.error);
+      }
+    });
+
+    builder.addCase(deployChangesThunk.fulfilled, (state, action) => {  
+      const payload = action.payload;
+
+      if ("data" in payload) {
+        alert(payload.data.status);
       } else {
         alert(payload.response.data.error);
       }

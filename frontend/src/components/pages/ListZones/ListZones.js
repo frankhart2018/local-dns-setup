@@ -4,8 +4,9 @@ import Card from "@mui/material/Card";
 import "./ListZones.css";
 import CardContents from "./CardContent";
 import { useDispatch, useSelector } from "react-redux";
-import { getZonesThunk } from "../../../services/dns-thunk";
+import { deployChangesThunk, getZonesThunk } from "../../../services/dns-thunk";
 import NavBar from "../../parts/NavBar/NavBar";
+import { Button } from "@mui/material";
 
 const ListZones = () => {
   const { zones } = useSelector((state) => state.dns);
@@ -16,9 +17,26 @@ const ListZones = () => {
     dispatch(getZonesThunk());
   }, [dispatch]);
 
+  const deployChangesHandler = () => {
+    const serverPassword = prompt("Enter server password");
+    if (serverPassword === null || serverPassword === "") return;
+    dispatch(deployChangesThunk({ serverPassword }));
+  };
+
   return (
     <div>
       <NavBar />
+      <Button
+        variant="contained"
+        color="primary"
+        style={{
+          margin: "10px",
+        }}
+        onClick={deployChangesHandler}
+      >
+        Deploy Changes
+      </Button>
+      <br />
       <div className="row">
         {zones !== null && zones.length > 0 ? (
           zones.map((zone) => {

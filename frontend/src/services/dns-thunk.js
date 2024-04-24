@@ -22,7 +22,7 @@ export const getARecordsThunk = createAsyncThunk(
     return await callServiceOrReturnError(dnsService.getARecords, [
       payload.zoneName,
     ]);
-  },
+  }
 );
 
 export const deleteARecordThunk = createAsyncThunk(
@@ -32,7 +32,7 @@ export const deleteARecordThunk = createAsyncThunk(
       payload.zoneName,
       payload.aName,
     ]);
-  },
+  }
 );
 
 export const addARecordThunk = createAsyncThunk(
@@ -43,7 +43,7 @@ export const addARecordThunk = createAsyncThunk(
       payload.aName,
       payload.ip,
     ]);
-  },
+  }
 );
 
 export const addZoneThunk = createAsyncThunk("dns/addZone", async (payload) => {
@@ -56,12 +56,18 @@ export const deleteZoneThunk = createAsyncThunk(
     return await callServiceOrReturnError(dnsService.deleteZone, [
       payload.zoneName,
     ]);
-  },
+  }
 );
 
-export const pingUrlThunk = createAsyncThunk(
-  "dns/pingUrl",
+export const pingUrlThunk = createAsyncThunk("dns/pingUrl", async (payload) => {
+  return await callServiceOrReturnError(dnsService.pingUrl, [payload.url]);
+});
+
+export const deployChangesThunk = createAsyncThunk(
+  "dns/deployChanges",
   async (payload) => {
-    return await callServiceOrReturnError(dnsService.pingUrl, [payload.url]);
-  },
+    return await callServiceOrReturnError(dnsService.deployChangesHandler, [
+      payload.serverPassword,
+    ]);
+  }
 );

@@ -9,7 +9,7 @@ export const getZones = async () => {
 
 export const getARecords = async (zoneName) => {
   const response = await axios.get(
-    `${REACT_APP_API_BASE}/a-records/${zoneName}`,
+    `${REACT_APP_API_BASE}/a-records/${zoneName}`
   );
   return response;
 };
@@ -19,7 +19,7 @@ export const deleteARecord = async (zoneName, aName) => {
     `${REACT_APP_API_BASE}/a-record/${zoneName}`,
     {
       data: { aName },
-    },
+    }
   );
   return response;
 };
@@ -46,4 +46,11 @@ export const deleteZone = async (zoneName) => {
 export const pingUrl = async (url) => {
   const response = await axios.get(`${REACT_APP_API_BASE}/ping/${url}`);
   return response;
-}
+};
+
+export const deployChangesHandler = async (serverPassword) => {
+  const response = await axios.post(`${REACT_APP_API_BASE}/deploy-changes`, {
+    serverPassword,
+  });
+  return response;
+};
