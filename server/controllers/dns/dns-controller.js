@@ -9,6 +9,7 @@ import {
   getARecords,
   getAllZones,
 } from "./dns-dao.js";
+import { createDeploymentConfigs } from "../../utils/file-utils.js";
 
 const createZoneHandler = async (req, res, logger) => {
   const zoneObj = req.body;
@@ -80,7 +81,9 @@ const deleteARecordHandler = async (req, res, logger) => {
 const pingUrlHandler = async (req, res, logger) => {
   const { url } = req.params;
 
-  const executorStrategy = PipeExecuteStrategy.builder().withPipePath("command-runner").build();
+  const executorStrategy = PipeExecuteStrategy.builder()
+    .withPipePath("command-runner")
+    .build();
   const command = `dig +short ${url}`;
   const commandExecutor = new CommandExecutor(command, executorStrategy);
   const result = commandExecutor.execute();
@@ -94,6 +97,16 @@ const pingUrlHandler = async (req, res, logger) => {
       error: result.value.trim(),
     });
   }
+};
+
+const deployChangesHandler = async (req, res, logger) => {
+  const result = await getAllZones();
+
+  createDeploymentConfigs(result);
+
+  sendRespone(req, res, logger, "info", 200, {
+    status: "Ok"
+  });
 };
 
 const DnsController = (app, logger) => {
@@ -118,9 +131,12 @@ const DnsController = (app, logger) => {
   );
 
   //////////////////////////////////////////
-  // TEST THINGS
+  // TEST AND DEPLOY
   //////////////////////////////////////////
   app.get("/ping/:url", (req, res) => pingUrlHandler(req, res, logger));
+  app.post("/deploy-changes", (req, res) =>
+    deployChangesHandler(req, res, logger)
+  );
 };
 
 export default DnsController;
