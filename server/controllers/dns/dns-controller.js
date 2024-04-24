@@ -9,7 +9,8 @@ import {
   getARecords,
   getAllZones,
 } from "./dns-dao.js";
-import { createDeploymentConfigs } from "../../utils/file-utils.js";
+import { createDeploymentConfigs } from "../../utils/config-generator-utils.js";
+import { DNS_CONFIG_DIR, PIPE_COMM_DIR, PIPE_PATH } from "../../utils/path-utils.js";
 
 const createZoneHandler = async (req, res, logger) => {
   const zoneObj = req.body;
@@ -82,7 +83,9 @@ const pingUrlHandler = async (req, res, logger) => {
   const { url } = req.params;
 
   const executorStrategy = PipeExecuteStrategy.builder()
-    .withPipePath("command-runner")
+    .withPipePath(PIPE_PATH)
+    .withCache(false)
+    .withOutputPath(PIPE_COMM_DIR + "/output.txt")
     .build();
   const command = `dig +short ${url}`;
   const commandExecutor = new CommandExecutor(command, executorStrategy);
@@ -106,12 +109,12 @@ const deployChangesHandler = async (req, res, logger) => {
   createDeploymentConfigs(result);
 
   const pipeExecuteStrategy = PipeExecuteStrategy.builder()
-    .withPipePath("command-runner")
+    .withPipePath(PIPE_PATH)
+    .withCache(false)
+    .withOutputPath(PIPE_COMM_DIR + "/output.txt")
     .build();
-  const commandExecutor = new CommandExecutor(
-    `cd dns-config && echo '${serverPassword}' | sudo -S docker-compose up -d --build --force-recreate`,
-    pipeExecuteStrategy
-  );
+  const command = `cd ${DNS_CONFIG_DIR} && echo '${serverPassword}' | sudo -S docker-compose up -d --build --force-recreate`;
+  const commandExecutor = new CommandExecutor(command, pipeExecuteStrategy);
   let executionResult = commandExecutor.execute();
 
   if (executionResult.type === 0) {
@@ -122,7 +125,6 @@ const deployChangesHandler = async (req, res, logger) => {
     sendRespone(req, res, logger, "error", 500, {
       error: executionResult.value.trim(),
     });
-  
   }
 };
 

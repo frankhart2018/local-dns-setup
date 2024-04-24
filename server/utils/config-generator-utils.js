@@ -1,6 +1,7 @@
 import { writeFileSync, existsSync, mkdirSync } from "fs";
 import yaml from "js-yaml";
 import { getARecords } from "../controllers/dns/dns-dao.js";
+import { DNS_CONFIG_DIR } from "./path-utils.js";
 
 const createDirIfNotExists = (dir) => {
   if (!existsSync(dir)) {
@@ -10,10 +11,10 @@ const createDirIfNotExists = (dir) => {
 
 const createDeploymentConfigs = (zones) => {
   const dirs = [
-    "./dns-config",
-    "./dns-config/cache",
-    "./dns-config/records",
-    "./dns-config/config",
+    DNS_CONFIG_DIR,
+    DNS_CONFIG_DIR + "/cache",
+    DNS_CONFIG_DIR + "/records",
+    DNS_CONFIG_DIR + "/config",
   ];
   dirs.forEach((dir) => {
     createDirIfNotExists(dir);

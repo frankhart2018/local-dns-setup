@@ -1,16 +1,5 @@
-import os from "os";
-import path from "path";
-import fs from "fs";
+const PIPE_COMM_DIR = process.env.PIPE_COMM_DIR || "./pipe-comm";
+const PIPE_PATH = process.env.PIPE_PATH || "./command-runner";
+const DNS_CONFIG_DIR = process.env.DNS_CONFIG_DIR || "./dns-config";
 
-const createDirectoriesIfNotExistSync = (dirPath) => {
-  try {
-    fs.accessSync(dirPath);
-  } catch (error) {
-    fs.mkdirSync(dirPath, { recursive: true });
-  }
-};
-
-const HOME_DIR = os.homedir();
-const PRIMISTORE_DIR = path.join(HOME_DIR, ".primistore");
-
-export { createDirectoriesIfNotExistSync, PRIMISTORE_DIR };
+export { PIPE_COMM_DIR, PIPE_PATH, DNS_CONFIG_DIR };
