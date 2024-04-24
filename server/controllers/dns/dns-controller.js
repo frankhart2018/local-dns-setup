@@ -100,13 +100,30 @@ const pingUrlHandler = async (req, res, logger) => {
 };
 
 const deployChangesHandler = async (req, res, logger) => {
+  const serverPassword = req.body.serverPassword;
   const result = await getAllZones();
 
   createDeploymentConfigs(result);
 
-  sendRespone(req, res, logger, "info", 200, {
-    status: "Ok"
-  });
+  const pipeExecuteStrategy = PipeExecuteStrategy.builder()
+    .withPipePath("command-runner")
+    .build();
+  const commandExecutor = new CommandExecutor(
+    `cd dns-config && echo '${serverPassword}' | sudo -S docker-compose up -d --build --force-recreate`,
+    pipeExecuteStrategy
+  );
+  let executionResult = commandExecutor.execute();
+
+  if (executionResult.type === 0) {
+    sendRespone(req, res, logger, "info", 200, {
+      status: executionResult.value.trim(),
+    });
+  } else {
+    sendRespone(req, res, logger, "error", 500, {
+      error: executionResult.value.trim(),
+    });
+  
+  }
 };
 
 const DnsController = (app, logger) => {
