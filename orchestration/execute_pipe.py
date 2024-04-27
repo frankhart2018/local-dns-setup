@@ -15,13 +15,10 @@ while True:
     with open(args.pipe_path) as f:
         command = f.read().strip()
 
-    print(command)
     try:
         command_obj = json.loads(command)
     except:
         command_obj = {"cmd": "", "outputPath": os.path.join(args.pipe_output_dir, "output.txt")}
-    print(command_obj)
-    print("*" * 50)
 
     process = subprocess.Popen(
         command_obj["cmd"], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
