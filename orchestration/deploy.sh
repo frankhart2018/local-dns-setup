@@ -34,6 +34,6 @@ IP=`python3 get_ip.py`
 mkdir -p $PIPE_COMM_DIR
 mkdir -p $DNS_CONFIG_PATH
 make_fifo_if_not_exists $PIPE_PATH
-# python3 execute_pipe.py --pipe-path $PIPE_PATH --pipe-output-dir $PIPE_COMM_DIR &
+python3 execute_pipe.py --pipe-path $PIPE_PATH --pipe-output-dir $PIPE_COMM_DIR &
 
 sudo IP=$IP PIPE_COMM_DIR=$PIPE_COMM_DIR PIPE_PATH=$PIPE_PATH DNS_CONFIG_DIR=$DNS_CONFIG_PATH docker-compose up -d
