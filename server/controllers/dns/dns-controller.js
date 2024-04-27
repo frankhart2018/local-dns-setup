@@ -10,7 +10,7 @@ import {
   getAllZones,
 } from "./dns-dao.js";
 import { createDeploymentConfigs } from "../../utils/config-generator-utils.js";
-import { DNS_CONFIG_DIR, PIPE_COMM_DIR, PIPE_PATH } from "../../utils/path-utils.js";
+import { HOST_DNS_CONFIG_DIR, PIPE_COMM_DIR, PIPE_PATH } from "../../utils/path-utils.js";
 
 const createZoneHandler = async (req, res, logger) => {
   const zoneObj = req.body;
@@ -113,7 +113,7 @@ const deployChangesHandler = async (req, res, logger) => {
     .withCache(false)
     .withOutputPath(PIPE_COMM_DIR + "/output.txt")
     .build();
-  const command = `cd ${DNS_CONFIG_DIR} && echo '${serverPassword}' | sudo -S docker-compose up -d --build --force-recreate`;
+  const command = `cd ${HOST_DNS_CONFIG_DIR} && echo '${serverPassword}' | sudo -S docker-compose up -d --build --force-recreate`;
   const commandExecutor = new CommandExecutor(command, pipeExecuteStrategy);
   let executionResult = commandExecutor.execute();
 

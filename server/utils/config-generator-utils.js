@@ -97,7 +97,7 @@ const getZoneFile = async (zoneObj) => {
   let zoneFileContents = `
 $TTL 2d
 
-$ORIGIN ghar.
+$ORIGIN ${zoneObj.name}.
 
 @        IN        SOA        ${fourthColumnContents[0]}${" ".repeat(
     totalSpaces - fourthColumnContents[0].length

@@ -1,29 +1,36 @@
 version: "3"
 services:
   dns_manager_frontend:
+    container_name: dns_manager_frontend
     build:
-      context: ./frontend
+      context: ../frontend
     ports:
       - "3000:3000"
     environment:
       - REACT_APP_API_BASE=http://${IP}:4000
 
   dns_manager_server:
+    container_name: dns_manager_server
     build:
-      context: ./server
+      context: ../server
     ports:
       - "4000:4000"
     depends_on:
       - mongodb
     environment:
       - HOST=0.0.0.0
-      - DB_CONNECTION_STRING=mongodb://mongodb:27017/primistore
+      - DB_CONNECTION_STRING=mongodb://mongodb:27017/localdns
+      - PIPE_COMM_DIR=/pipe-comm
+      - PIPE_PATH=/command-runner
+      - DNS_CONFIG_DIR=/dns-config
+      - HOST_DNS_CONFIG_DIR=${DNS_CONFIG_DIR}
     volumes:
       - ${PIPE_COMM_DIR}:/pipe-comm
       - ${PIPE_PATH}:/command-runner
       - ${DNS_CONFIG_DIR}:/dns-config
 
   mongodb:
+    container_name: dns_manager_mongodb
     image: mongo:bionic
     ports:
       - "27017:27017"
