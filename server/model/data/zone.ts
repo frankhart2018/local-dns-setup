@@ -1,6 +1,6 @@
-import { SOA } from './soa.js';
-import { IP } from './ip.js';
-import { ARecord } from './a-record.js';
+import { SOA } from "./soa.js";
+import { IP } from "./ip.js";
+import { ARecord } from "./a-record.js";
 
 interface Zone {
   name: string;

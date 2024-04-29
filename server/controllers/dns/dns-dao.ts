@@ -21,7 +21,11 @@ export const getAllZones = (): Promise<Zone[]> => {
   return dnsModel.find({}, { a_records: 0 });
 };
 
-export const addARecord = (zoneName: string, aName: string, ip: IP): Promise<Zone | null> => {
+export const addARecord = (
+  zoneName: string,
+  aName: string,
+  ip: IP,
+): Promise<Zone | null> => {
   const query = { name: zoneName, "a_records.name": { $ne: aName } };
   const update = {
     $push: {
@@ -39,7 +43,10 @@ export const getARecords = (zoneName: string): Promise<Zone | null> => {
   return dnsModel.findOne({ name: zoneName });
 };
 
-export const deleteARecord = (zoneName: string, aName: string): Promise<Zone | null> => {
+export const deleteARecord = (
+  zoneName: string,
+  aName: string,
+): Promise<Zone | null> => {
   const query = { name: zoneName };
   const update = {
     $pull: {

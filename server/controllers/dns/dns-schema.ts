@@ -35,7 +35,7 @@ const schema = new mongoose.Schema<Zone>(
   },
   {
     collection: "zones",
-  }
+  },
 );
 
 export default schema;

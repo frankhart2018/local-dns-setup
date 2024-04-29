@@ -1,9 +1,9 @@
 interface GetPingUrlRequestParams {
-    url: string;
+  url: string;
 }
 
 interface PostDeployChangesRequestBody {
-    serverPassword: string;
+  serverPassword: string;
 }
 
 export { GetPingUrlRequestParams, PostDeployChangesRequestBody };

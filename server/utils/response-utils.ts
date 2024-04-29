@@ -8,7 +8,7 @@ const sendRespone = (
   logger: Logger,
   logLevel: string,
   status: number,
-  sendObject: object
+  sendObject: object,
 ) => {
   logger.log({
     level: logLevel,

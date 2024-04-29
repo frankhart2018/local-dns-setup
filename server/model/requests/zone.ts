@@ -3,7 +3,7 @@ import { Zone } from "../data/zone.js";
 type PutCreateZoneRequestBody = Zone;
 
 interface DeleteZoneRequestParams {
-    zoneName: string;
+  zoneName: string;
 }
 
 export { PutCreateZoneRequestBody, DeleteZoneRequestParams };

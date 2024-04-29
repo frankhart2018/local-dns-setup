@@ -102,23 +102,23 @@ $TTL 2d
 $ORIGIN ${zoneObj.name}.
 
 @        IN        SOA        ${fourthColumnContents[0]}${" ".repeat(
-    totalSpaces - fourthColumnContents[0].length
+    totalSpaces - fourthColumnContents[0].length,
   )}${zoneObj.soa.admin_email} (
                               ${fourthColumnContents[1]}${" ".repeat(
-    totalSpaces - fourthColumnContents[1].length
-  )}; serial
+                                totalSpaces - fourthColumnContents[1].length,
+                              )}; serial
                               ${fourthColumnContents[2]}${" ".repeat(
-    totalSpaces - fourthColumnContents[2].length
-  )}; refresh
+                                totalSpaces - fourthColumnContents[2].length,
+                              )}; refresh
                               ${fourthColumnContents[3]}${" ".repeat(
-    totalSpaces - fourthColumnContents[3].length
-  )}; update retry
+                                totalSpaces - fourthColumnContents[3].length,
+                              )}; update retry
                               ${fourthColumnContents[4]}${" ".repeat(
-    totalSpaces - fourthColumnContents[4].length
-  )}; expire
+                                totalSpaces - fourthColumnContents[4].length,
+                              )}; expire
                               ${fourthColumnContents[5]}${" ".repeat(
-    totalSpaces - fourthColumnContents[4].length
-  )}; minimum ttl
+                                totalSpaces - fourthColumnContents[4].length,
+                              )}; minimum ttl
                               )
          IN        NS         ns.${zoneObj.name}.
 ns       IN        A          ${ipObjectToString(zoneObj.ip)}
@@ -134,7 +134,7 @@ ns       IN        A          ${ipObjectToString(zoneObj.ip)}
   zone.a_records.forEach((record) => {
     const aRecord = `
 ${record.name}${" ".repeat(
-      totalSpaces - record.name.length
+      totalSpaces - record.name.length,
     )}IN        A        ${ipObjectToString(record.ip)}\n`.trimStart();
 
     zoneFileContents += aRecord;

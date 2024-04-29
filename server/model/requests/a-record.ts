@@ -10,4 +10,8 @@ interface DeleteARecordRequestBody {
   aName: string;
 }
 
-export { GetARecordsRequestParams, DeleteARecordRequestParams, DeleteARecordRequestBody};
+export {
+  GetARecordsRequestParams,
+  DeleteARecordRequestParams,
+  DeleteARecordRequestBody,
+};

@@ -27,12 +27,15 @@ import {
   DeleteARecordRequestParams,
   GetARecordsRequestParams,
 } from "../../model/requests/a-record.js";
-import { GetPingUrlRequestParams, PostDeployChangesRequestBody } from "../../model/requests/test-and-deploy.js";
+import {
+  GetPingUrlRequestParams,
+  PostDeployChangesRequestBody,
+} from "../../model/requests/test-and-deploy.js";
 
 const createZoneHandler = async (
   req: Request,
   res: Response,
-  logger: Logger
+  logger: Logger,
 ) => {
   const zoneObj: PutCreateZoneRequestBody = req.body;
 
@@ -43,7 +46,7 @@ const createZoneHandler = async (
 const deleteZoneHandler = async (
   req: Request<DeleteZoneRequestParams>,
   res: Response,
-  logger: Logger
+  logger: Logger,
 ) => {
   const { zoneName } = req.params;
 
@@ -60,7 +63,7 @@ const deleteZoneHandler = async (
 const getAllZonesHandler = async (
   req: Request,
   res: Response,
-  logger: Logger
+  logger: Logger,
 ) => {
   const result = await getAllZones();
   sendRespone(req, res, logger, "info", 200, result);
@@ -69,7 +72,7 @@ const getAllZonesHandler = async (
 const addARecordHandler = async (
   req: Request,
   res: Response,
-  logger: Logger
+  logger: Logger,
 ) => {
   const zoneName = req.body.zoneName;
   const aName = req.body.aName;
@@ -88,7 +91,7 @@ const addARecordHandler = async (
 const getARecordsHandler = async (
   req: Request<GetARecordsRequestParams>,
   res: Response,
-  logger: Logger
+  logger: Logger,
 ) => {
   const { zoneName } = req.params;
 
@@ -105,7 +108,7 @@ const getARecordsHandler = async (
 const deleteARecordHandler = async (
   req: Request<DeleteARecordRequestParams>,
   res: Response,
-  logger: Logger
+  logger: Logger,
 ) => {
   const zoneName = req.params.zoneName;
   const body: DeleteARecordRequestBody = req.body;
@@ -123,7 +126,7 @@ const deleteARecordHandler = async (
 const pingUrlHandler = async (
   req: Request<GetPingUrlRequestParams>,
   res: Response,
-  logger: Logger
+  logger: Logger,
 ) => {
   const { url } = req.params;
 
@@ -150,7 +153,7 @@ const pingUrlHandler = async (
 const deployChangesHandler = async (
   req: Request,
   res: Response,
-  logger: Logger
+  logger: Logger,
 ) => {
   const body: PostDeployChangesRequestBody = req.body;
   const result = await getAllZones();
@@ -184,7 +187,7 @@ const DnsController = (app: Application, logger: Logger) => {
   //////////////////////////////////////////
   app.put("/zone", (req, res) => createZoneHandler(req, res, logger));
   app.delete("/zone/:zoneName", (req, res) =>
-    deleteZoneHandler(req, res, logger)
+    deleteZoneHandler(req, res, logger),
   );
   app.get("/zones", (req, res) => getAllZonesHandler(req, res, logger));
 
@@ -192,11 +195,11 @@ const DnsController = (app: Application, logger: Logger) => {
   // A RECORD
   //////////////////////////////////////////
   app.get("/a-records/:zoneName", (req, res) =>
-    getARecordsHandler(req, res, logger)
+    getARecordsHandler(req, res, logger),
   );
   app.post("/a-record", (req, res) => addARecordHandler(req, res, logger));
   app.delete("/a-record/:zoneName", (req, res) =>
-    deleteARecordHandler(req, res, logger)
+    deleteARecordHandler(req, res, logger),
   );
 
   //////////////////////////////////////////
@@ -204,7 +207,7 @@ const DnsController = (app: Application, logger: Logger) => {
   //////////////////////////////////////////
   app.get("/ping/:url", (req, res) => pingUrlHandler(req, res, logger));
   app.post("/deploy-changes", (req, res) =>
-    deployChangesHandler(req, res, logger)
+    deployChangesHandler(req, res, logger),
   );
 };
 
