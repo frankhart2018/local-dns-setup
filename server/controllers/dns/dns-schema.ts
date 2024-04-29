@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { SOA } from "../../model/soa.js";
-import { IP } from "../../model/ip.js";
-import { ARecord } from "../../model/a-record.js";
-import { Zone } from "../../model/zone.js";
+import { SOA } from "../../model/data/soa.js";
+import { IP } from "../../model/data/ip.js";
+import { ARecord } from "../../model/data/a-record.js";
+import { Zone } from "../../model/data/zone.js";
 
 const SOA = new mongoose.Schema<SOA>({
   admin_email: String,

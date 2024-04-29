@@ -18,15 +18,33 @@ import {
   PIPE_COMM_DIR,
   PIPE_PATH,
 } from "../../utils/path-utils.js";
+import {
+  DeleteZoneRequestParams,
+  PutCreateZoneRequestBody,
+} from "../../model/requests/zone.js";
+import {
+  DeleteARecordRequestBody,
+  DeleteARecordRequestParams,
+  GetARecordsRequestParams,
+} from "../../model/requests/a-record.js";
+import { GetPingUrlRequestParams, PostDeployChangesRequestBody } from "../../model/requests/test-and-deploy.js";
 
-const createZoneHandler = async (req: Request, res: Response, logger: Logger) => {
-  const zoneObj = req.body;
+const createZoneHandler = async (
+  req: Request,
+  res: Response,
+  logger: Logger
+) => {
+  const zoneObj: PutCreateZoneRequestBody = req.body;
 
   const result = await addZone(zoneObj);
   sendRespone(req, res, logger, "info", 200, result);
 };
 
-const deleteZoneHandler = async (req: Request, res: Response, logger: Logger) => {
+const deleteZoneHandler = async (
+  req: Request<DeleteZoneRequestParams>,
+  res: Response,
+  logger: Logger
+) => {
   const { zoneName } = req.params;
 
   const result = await deleteZone(zoneName);
@@ -39,12 +57,20 @@ const deleteZoneHandler = async (req: Request, res: Response, logger: Logger) =>
   }
 };
 
-const getAllZonesHandler = async (req: Request, res: Response, logger: Logger) => {
+const getAllZonesHandler = async (
+  req: Request,
+  res: Response,
+  logger: Logger
+) => {
   const result = await getAllZones();
   sendRespone(req, res, logger, "info", 200, result);
 };
 
-const addARecordHandler = async (req: Request, res: Response, logger: Logger) => {
+const addARecordHandler = async (
+  req: Request,
+  res: Response,
+  logger: Logger
+) => {
   const zoneName = req.body.zoneName;
   const aName = req.body.aName;
   const ip = req.body.ip;
@@ -59,7 +85,11 @@ const addARecordHandler = async (req: Request, res: Response, logger: Logger) =>
   }
 };
 
-const getARecordsHandler = async (req: Request, res: Response, logger: Logger) => {
+const getARecordsHandler = async (
+  req: Request<GetARecordsRequestParams>,
+  res: Response,
+  logger: Logger
+) => {
   const { zoneName } = req.params;
 
   const result = await getARecords(zoneName);
@@ -72,11 +102,15 @@ const getARecordsHandler = async (req: Request, res: Response, logger: Logger) =
   }
 };
 
-const deleteARecordHandler = async (req: Request, res: Response, logger: Logger) => {
+const deleteARecordHandler = async (
+  req: Request<DeleteARecordRequestParams>,
+  res: Response,
+  logger: Logger
+) => {
   const zoneName = req.params.zoneName;
-  const aName = req.body.aName;
+  const body: DeleteARecordRequestBody = req.body;
 
-  const result = await deleteARecord(zoneName, aName);
+  const result = await deleteARecord(zoneName, body.aName);
   if (result !== null) {
     sendRespone(req, res, logger, "info", 200, result);
   } else {
@@ -86,7 +120,11 @@ const deleteARecordHandler = async (req: Request, res: Response, logger: Logger)
   }
 };
 
-const pingUrlHandler = async (req: Request, res: Response, logger: Logger) => {
+const pingUrlHandler = async (
+  req: Request<GetPingUrlRequestParams>,
+  res: Response,
+  logger: Logger
+) => {
   const { url } = req.params;
 
   const executorStrategy = PipeExecuteStrategy.builder()
@@ -109,8 +147,12 @@ const pingUrlHandler = async (req: Request, res: Response, logger: Logger) => {
   }
 };
 
-const deployChangesHandler = async (req: Request, res: Response, logger: Logger) => {
-  const serverPassword = req.body.serverPassword;
+const deployChangesHandler = async (
+  req: Request,
+  res: Response,
+  logger: Logger
+) => {
+  const body: PostDeployChangesRequestBody = req.body;
   const result = await getAllZones();
 
   createDeploymentConfigs(result);
@@ -120,6 +162,7 @@ const deployChangesHandler = async (req: Request, res: Response, logger: Logger)
     .withCache(false)
     .withOutputPath(PIPE_COMM_DIR + "/output.txt")
     .build();
+  const serverPassword = body.serverPassword;
   const command = `cd ${HOST_DNS_CONFIG_DIR} && echo '${serverPassword}' | sudo -S docker-compose up -d --build --force-recreate`;
   const commandExecutor = new CommandExecutor(command, pipeExecuteStrategy);
   let executionResult = commandExecutor.execute();

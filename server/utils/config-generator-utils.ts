@@ -2,8 +2,8 @@ import { writeFileSync, existsSync, mkdirSync } from "fs";
 import yaml from "js-yaml";
 import { getARecords } from "../controllers/dns/dns-dao.js";
 import { DNS_CONFIG_DIR } from "./path-utils.js";
-import { Zone } from "../model/zone.js";
-import { IP } from "../model/ip.js";
+import { Zone } from "../model/data/zone.js";
+import { IP } from "../model/data/ip.js";
 
 const createDirIfNotExists = (dir: string) => {
   if (!existsSync(dir)) {

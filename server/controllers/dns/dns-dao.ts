@@ -1,5 +1,5 @@
-import { IP } from "../../model/ip.js";
-import { Zone } from "../../model/zone.js";
+import { IP } from "../../model/data/ip.js";
+import { Zone } from "../../model/data/zone.js";
 import dnsModel from "./dns-model.js";
 
 export const addZone = (zoneObj: Zone): Promise<Zone | null> => {
