@@ -82,7 +82,7 @@ const ipObjectToString = (ipObj: IP): string => {
 };
 
 const getZoneFile = async (zoneObj: Zone): Promise<string> => {
-  let fourthColumnContents = [
+  const fourthColumnContents = [
     `ns.${zoneObj.name}.`,
     zoneObj.soa.serial,
     zoneObj.soa.refresh,
@@ -91,7 +91,7 @@ const getZoneFile = async (zoneObj: Zone): Promise<string> => {
     zoneObj.soa.min_TTL,
     ipObjectToString(zoneObj.ip),
   ];
-  let longestString = fourthColumnContents.reduce((acc, str) => {
+  const longestString = fourthColumnContents.reduce((acc, str) => {
     return str.length > acc ? str.length : acc;
   }, 0);
   let totalSpaces = longestString + 4;

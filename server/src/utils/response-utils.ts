@@ -3,7 +3,7 @@ import { Logger } from "winston";
 import { Request, Response } from "express";
 
 const sendRespone = (
-  req: Request<any>,
+  req: Request<unknown>,
   res: Response,
   logger: Logger,
   logLevel: string,
