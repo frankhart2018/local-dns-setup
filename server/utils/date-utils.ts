@@ -1,9 +1,9 @@
-const getCurrentTime = () => {
+const getCurrentTime = (): string => {
   const currentDate = new Date();
 
   const systemTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  const options = {
+  const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -15,7 +15,7 @@ const getCurrentTime = () => {
   };
 
   const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
-    currentDate,
+    currentDate
   );
 
   return formattedDate;

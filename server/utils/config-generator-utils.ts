@@ -2,14 +2,16 @@ import { writeFileSync, existsSync, mkdirSync } from "fs";
 import yaml from "js-yaml";
 import { getARecords } from "../controllers/dns/dns-dao.js";
 import { DNS_CONFIG_DIR } from "./path-utils.js";
+import { Zone } from "../model/zone.js";
+import { IP } from "../model/ip.js";
 
-const createDirIfNotExists = (dir) => {
+const createDirIfNotExists = (dir: string) => {
   if (!existsSync(dir)) {
     mkdirSync(dir);
   }
 };
 
-const createDeploymentConfigs = (zones) => {
+const createDeploymentConfigs = (zones: Zone[]) => {
   const dirs = [
     DNS_CONFIG_DIR,
     DNS_CONFIG_DIR + "/cache",
@@ -33,7 +35,7 @@ const createDeploymentConfigs = (zones) => {
   });
 };
 
-const getDockerComposeContents = () => {
+const getDockerComposeContents = (): string => {
   const dockerCompose = {
     version: "3",
     services: {
@@ -54,7 +56,7 @@ const getDockerComposeContents = () => {
   return yaml.dump(dockerCompose);
 };
 
-const getNamedConf = (zoneNames) => {
+const getNamedConf = (zoneNames: string[]): string => {
   let namedConf = `
 options {
     forwarders {
@@ -75,11 +77,11 @@ zone "${zoneName}" IN {
   return namedConf;
 };
 
-const ipObjectToString = (ipObj) => {
+const ipObjectToString = (ipObj: IP): string => {
   return `${ipObj.part_0}.${ipObj.part_1}.${ipObj.part_2}.${ipObj.part_3}`;
 };
 
-const getZoneFile = async (zoneObj) => {
+const getZoneFile = async (zoneObj: Zone): Promise<string> => {
   let fourthColumnContents = [
     `ns.${zoneObj.name}.`,
     zoneObj.soa.serial,

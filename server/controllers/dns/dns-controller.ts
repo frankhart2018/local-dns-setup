@@ -1,4 +1,7 @@
 import { CommandExecutor, PipeExecuteStrategy } from "command-executor-lib";
+import { Request, Response } from "express";
+import { Logger } from "winston";
+import { Application } from "express";
 
 import { sendRespone } from "../../utils/response-utils.js";
 import {
@@ -10,16 +13,20 @@ import {
   getAllZones,
 } from "./dns-dao.js";
 import { createDeploymentConfigs } from "../../utils/config-generator-utils.js";
-import { HOST_DNS_CONFIG_DIR, PIPE_COMM_DIR, PIPE_PATH } from "../../utils/path-utils.js";
+import {
+  HOST_DNS_CONFIG_DIR,
+  PIPE_COMM_DIR,
+  PIPE_PATH,
+} from "../../utils/path-utils.js";
 
-const createZoneHandler = async (req, res, logger) => {
+const createZoneHandler = async (req: Request, res: Response, logger: Logger) => {
   const zoneObj = req.body;
 
   const result = await addZone(zoneObj);
   sendRespone(req, res, logger, "info", 200, result);
 };
 
-const deleteZoneHandler = async (req, res, logger) => {
+const deleteZoneHandler = async (req: Request, res: Response, logger: Logger) => {
   const { zoneName } = req.params;
 
   const result = await deleteZone(zoneName);
@@ -32,12 +39,12 @@ const deleteZoneHandler = async (req, res, logger) => {
   }
 };
 
-const getAllZonesHandler = async (req, res, logger) => {
+const getAllZonesHandler = async (req: Request, res: Response, logger: Logger) => {
   const result = await getAllZones();
   sendRespone(req, res, logger, "info", 200, result);
 };
 
-const addARecordHandler = async (req, res, logger) => {
+const addARecordHandler = async (req: Request, res: Response, logger: Logger) => {
   const zoneName = req.body.zoneName;
   const aName = req.body.aName;
   const ip = req.body.ip;
@@ -52,7 +59,7 @@ const addARecordHandler = async (req, res, logger) => {
   }
 };
 
-const getARecordsHandler = async (req, res, logger) => {
+const getARecordsHandler = async (req: Request, res: Response, logger: Logger) => {
   const { zoneName } = req.params;
 
   const result = await getARecords(zoneName);
@@ -65,7 +72,7 @@ const getARecordsHandler = async (req, res, logger) => {
   }
 };
 
-const deleteARecordHandler = async (req, res, logger) => {
+const deleteARecordHandler = async (req: Request, res: Response, logger: Logger) => {
   const zoneName = req.params.zoneName;
   const aName = req.body.aName;
 
@@ -79,7 +86,7 @@ const deleteARecordHandler = async (req, res, logger) => {
   }
 };
 
-const pingUrlHandler = async (req, res, logger) => {
+const pingUrlHandler = async (req: Request, res: Response, logger: Logger) => {
   const { url } = req.params;
 
   const executorStrategy = PipeExecuteStrategy.builder()
@@ -102,7 +109,7 @@ const pingUrlHandler = async (req, res, logger) => {
   }
 };
 
-const deployChangesHandler = async (req, res, logger) => {
+const deployChangesHandler = async (req: Request, res: Response, logger: Logger) => {
   const serverPassword = req.body.serverPassword;
   const result = await getAllZones();
 
@@ -128,7 +135,7 @@ const deployChangesHandler = async (req, res, logger) => {
   }
 };
 
-const DnsController = (app, logger) => {
+const DnsController = (app: Application, logger: Logger) => {
   //////////////////////////////////////////
   // ZONE
   //////////////////////////////////////////
