@@ -34,13 +34,9 @@ jobs:
         run: |
           npm install eslint@8.10.0
           npm install @microsoft/eslint-formatter-sarif@2.1.7
-
-      - name: Change working directory
-        run: cd server 
-
       - name: Run ESLint
-        run: npx eslint ./src/**/*.ts
-          --config eslint.config.mjs
+        run: npx eslint ./server/src/**/*.ts
+          --config ./server/eslint.config.mjs
           --format @microsoft/eslint-formatter-sarif
           --output-file eslint-results.sarif
         continue-on-error: true
