@@ -30,11 +30,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Move to the server directory
-        run: cd server
+      - name: Move to the server directory and npm install 
+        run: cd server && npm install
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run ESLint
-        run: npm run lint
+      - name: Move to the server directory and run ESLint
+        run: cd server && npm run lint
