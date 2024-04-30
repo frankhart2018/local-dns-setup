@@ -1,4 +1,7 @@
 import { CommandExecutor, PipeExecuteStrategy } from "command-executor-lib";
+import { Request, Response } from "express";
+import { Logger } from "winston";
+import { Application } from "express";
 
 import { sendRespone } from "../../utils/response-utils.js";
 import {
@@ -10,16 +13,41 @@ import {
   getAllZones,
 } from "./dns-dao.js";
 import { createDeploymentConfigs } from "../../utils/config-generator-utils.js";
-import { HOST_DNS_CONFIG_DIR, PIPE_COMM_DIR, PIPE_PATH } from "../../utils/path-utils.js";
+import {
+  HOST_DNS_CONFIG_DIR,
+  PIPE_COMM_DIR,
+  PIPE_PATH,
+} from "../../utils/path-utils.js";
+import {
+  DeleteZoneRequestParams,
+  PutCreateZoneRequestBody,
+} from "../../model/requests/zone.js";
+import {
+  DeleteARecordRequestBody,
+  DeleteARecordRequestParams,
+  GetARecordsRequestParams,
+} from "../../model/requests/a-record.js";
+import {
+  GetPingUrlRequestParams,
+  PostDeployChangesRequestBody,
+} from "../../model/requests/test-and-deploy.js";
 
-const createZoneHandler = async (req, res, logger) => {
-  const zoneObj = req.body;
+const createZoneHandler = async (
+  req: Request,
+  res: Response,
+  logger: Logger,
+) => {
+  const zoneObj: PutCreateZoneRequestBody = req.body;
 
   const result = await addZone(zoneObj);
   sendRespone(req, res, logger, "info", 200, result);
 };
 
-const deleteZoneHandler = async (req, res, logger) => {
+const deleteZoneHandler = async (
+  req: Request<DeleteZoneRequestParams>,
+  res: Response,
+  logger: Logger,
+) => {
   const { zoneName } = req.params;
 
   const result = await deleteZone(zoneName);
@@ -32,12 +60,20 @@ const deleteZoneHandler = async (req, res, logger) => {
   }
 };
 
-const getAllZonesHandler = async (req, res, logger) => {
+const getAllZonesHandler = async (
+  req: Request,
+  res: Response,
+  logger: Logger,
+) => {
   const result = await getAllZones();
   sendRespone(req, res, logger, "info", 200, result);
 };
 
-const addARecordHandler = async (req, res, logger) => {
+const addARecordHandler = async (
+  req: Request,
+  res: Response,
+  logger: Logger,
+) => {
   const zoneName = req.body.zoneName;
   const aName = req.body.aName;
   const ip = req.body.ip;
@@ -52,7 +88,11 @@ const addARecordHandler = async (req, res, logger) => {
   }
 };
 
-const getARecordsHandler = async (req, res, logger) => {
+const getARecordsHandler = async (
+  req: Request<GetARecordsRequestParams>,
+  res: Response,
+  logger: Logger,
+) => {
   const { zoneName } = req.params;
 
   const result = await getARecords(zoneName);
@@ -65,11 +105,15 @@ const getARecordsHandler = async (req, res, logger) => {
   }
 };
 
-const deleteARecordHandler = async (req, res, logger) => {
+const deleteARecordHandler = async (
+  req: Request<DeleteARecordRequestParams>,
+  res: Response,
+  logger: Logger,
+) => {
   const zoneName = req.params.zoneName;
-  const aName = req.body.aName;
+  const body: DeleteARecordRequestBody = req.body;
 
-  const result = await deleteARecord(zoneName, aName);
+  const result = await deleteARecord(zoneName, body.aName);
   if (result !== null) {
     sendRespone(req, res, logger, "info", 200, result);
   } else {
@@ -79,7 +123,11 @@ const deleteARecordHandler = async (req, res, logger) => {
   }
 };
 
-const pingUrlHandler = async (req, res, logger) => {
+const pingUrlHandler = async (
+  req: Request<GetPingUrlRequestParams>,
+  res: Response,
+  logger: Logger,
+) => {
   const { url } = req.params;
 
   const executorStrategy = PipeExecuteStrategy.builder()
@@ -102,8 +150,12 @@ const pingUrlHandler = async (req, res, logger) => {
   }
 };
 
-const deployChangesHandler = async (req, res, logger) => {
-  const serverPassword = req.body.serverPassword;
+const deployChangesHandler = async (
+  req: Request,
+  res: Response,
+  logger: Logger,
+) => {
+  const body: PostDeployChangesRequestBody = req.body;
   const result = await getAllZones();
 
   createDeploymentConfigs(result);
@@ -113,6 +165,7 @@ const deployChangesHandler = async (req, res, logger) => {
     .withCache(false)
     .withOutputPath(PIPE_COMM_DIR + "/output.txt")
     .build();
+  const serverPassword = body.serverPassword;
   const command = `cd ${HOST_DNS_CONFIG_DIR} && echo '${serverPassword}' | sudo -S docker-compose up -d --build --force-recreate`;
   const commandExecutor = new CommandExecutor(command, pipeExecuteStrategy);
   let executionResult = commandExecutor.execute();
@@ -128,13 +181,13 @@ const deployChangesHandler = async (req, res, logger) => {
   }
 };
 
-const DnsController = (app, logger) => {
+const DnsController = (app: Application, logger: Logger) => {
   //////////////////////////////////////////
   // ZONE
   //////////////////////////////////////////
   app.put("/zone", (req, res) => createZoneHandler(req, res, logger));
   app.delete("/zone/:zoneName", (req, res) =>
-    deleteZoneHandler(req, res, logger)
+    deleteZoneHandler(req, res, logger),
   );
   app.get("/zones", (req, res) => getAllZonesHandler(req, res, logger));
 
@@ -142,11 +195,11 @@ const DnsController = (app, logger) => {
   // A RECORD
   //////////////////////////////////////////
   app.get("/a-records/:zoneName", (req, res) =>
-    getARecordsHandler(req, res, logger)
+    getARecordsHandler(req, res, logger),
   );
   app.post("/a-record", (req, res) => addARecordHandler(req, res, logger));
   app.delete("/a-record/:zoneName", (req, res) =>
-    deleteARecordHandler(req, res, logger)
+    deleteARecordHandler(req, res, logger),
   );
 
   //////////////////////////////////////////
@@ -154,7 +207,7 @@ const DnsController = (app, logger) => {
   //////////////////////////////////////////
   app.get("/ping/:url", (req, res) => pingUrlHandler(req, res, logger));
   app.post("/deploy-changes", (req, res) =>
-    deployChangesHandler(req, res, logger)
+    deployChangesHandler(req, res, logger),
   );
 };
 
