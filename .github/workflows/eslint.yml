@@ -30,18 +30,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install ESLint
-        run: |
-          npm install eslint@8.57.0
+      - name: Move to the server directory
+        run: cd server
+
+      - name: Install dependencies
+        run: npm install
 
       - name: Run ESLint
-        run: npx eslint ./server/src/**/*.ts
-          --config ./server/eslint.config.mjs
-          --output-file eslint-results.sarif
-        continue-on-error: true
-
-      - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: eslint-results.sarif
-          wait-for-processing: true
+        run: npm run lint
