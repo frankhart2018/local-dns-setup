@@ -7,7 +7,7 @@
 # More details at https://github.com/eslint/eslint
 # and https://eslint.org
 
-name: ESLint
+name: ESLint and Prettier
 
 on:
   push:
@@ -20,7 +20,7 @@ on:
 
 jobs:
   eslint:
-    name: Run eslint scanning
+    name: Run eslint scanning and prettier checking
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -35,3 +35,6 @@ jobs:
 
       - name: Move to the server directory and run ESLint
         run: cd server && npm run lint
+
+      - name: Move to the server directory and run Prettier
+        run: cd server && npm run format-check
