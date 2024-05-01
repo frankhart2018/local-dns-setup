@@ -3,6 +3,7 @@ import React from "react";
 import { Button, CardActions, CardContent, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { deleteZoneThunk } from "../../../services/dns-thunk";
+import { DeleteZonePayload } from "../../../services/request-payload";
 
 const CardContents = ({ zoneObj }) => {
   const ipToString = (ipObject) => {
@@ -17,10 +18,11 @@ const CardContents = ({ zoneObj }) => {
 
   const deleteZone = () => {
     if (window.confirm("Are you sure you want to delete this zone?")) {
+      const payload: DeleteZonePayload = {
+        zoneName: zoneObj.name,
+      };
       dispatch(
-        deleteZoneThunk({
-          zoneName: zoneObj.name,
-        }),
+        deleteZoneThunk(payload),
       );
       window.location.reload();
     } else {
