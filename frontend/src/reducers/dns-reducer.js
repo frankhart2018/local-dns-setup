@@ -45,7 +45,7 @@ const dnsSlice = createSlice({
       }
     });
 
-    builder.addCase(deployChangesThunk.fulfilled, (state, action) => {  
+    builder.addCase(deployChangesThunk.fulfilled, (state, action) => {
       const payload = action.payload;
 
       if ("data" in payload) {

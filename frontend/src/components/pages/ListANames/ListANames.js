@@ -69,7 +69,7 @@ const ListANames = () => {
           >
             Unknown
           </span>
-        ))
+        )),
       );
     }
   }, [aRecords]);
@@ -100,7 +100,7 @@ const ListANames = () => {
     }
 
     const ipRegex = new RegExp(
-      "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+      "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",
     );
     if (!ipRegex.test(ip)) {
       alert("Invalid IP address");
@@ -112,7 +112,7 @@ const ListANames = () => {
         zoneName,
         aName,
         ip: ipToObject(ip),
-      })
+      }),
     );
   };
 
@@ -120,7 +120,7 @@ const ListANames = () => {
     dispatch(
       pingUrlThunk({
         url: `${aName}.${zoneName}`,
-      })
+      }),
     ).then((result) => {
       setPingResult((prev) => {
         const newPingResult = [...prev];
@@ -140,7 +140,7 @@ const ListANames = () => {
       dispatch(
         pingUrlThunk({
           url: `${aRecord.name}.${zoneName}`,
-        })
+        }),
       ).then((result) => {
         setPingResult((prev) => {
           console.log(result);
@@ -148,11 +148,13 @@ const ListANames = () => {
           newPingResult[idx] = result.payload.data.resolved ? (
             <span style={{ color: "green", fontWeight: "bold" }}>Resolved</span>
           ) : (
-            <span style={{ color: "red", fontWeight: "bold" }}>Not Resolved</span>
+            <span style={{ color: "red", fontWeight: "bold" }}>
+              Not Resolved
+            </span>
           );
 
           return newPingResult;
-        });        
+        });
       });
     });
   };

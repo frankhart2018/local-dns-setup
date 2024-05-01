@@ -11,12 +11,12 @@ name: ESLint and Prettier
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ "master" ]
+    branches: ["master"]
   schedule:
-    - cron: '16 9 * * 5'
+    - cron: "16 9 * * 5"
 
 jobs:
   eslint:
@@ -30,7 +30,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Move to the server directory and npm install 
+      - name: Move to the server directory and npm install
         run: cd server && npm install
 
       - name: Move to the server directory and run ESLint

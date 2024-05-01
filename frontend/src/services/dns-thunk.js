@@ -1,73 +1,75 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-import * as dnsService from "./dns-service";
+import { REACT_APP_API_BASE } from "../utils/constants";
 
-const callServiceOrReturnError = async (serviceFn, args = null) => {
+const callEndpoint = async (endpoint, method, body = null) => {
+  const response = await axios[method](
+    `${REACT_APP_API_BASE}/${endpoint}`,
+    body,
+  );
+  return response;
+};
+
+const callServiceOrReturnError = async (endpoint, method, body = null) => {
   try {
-    const response =
-      args === null ? await serviceFn() : await serviceFn(...args);
+    const response = await callEndpoint(endpoint, method, body);
     return response;
   } catch (e) {
     return e;
   }
 };
 
-export const getZonesThunk = createAsyncThunk("dns/getZones", async () => {
-  return await callServiceOrReturnError(dnsService.getZones);
-});
+export const getZonesThunk = createAsyncThunk(
+  "dns/getZones",
+  async () => await callServiceOrReturnError("zones", "get"),
+);
 
 export const getARecordsThunk = createAsyncThunk(
   "dns/getARecords",
-  async (payload) => {
-    return await callServiceOrReturnError(dnsService.getARecords, [
-      payload.zoneName,
-    ]);
-  }
+  async (payload) =>
+    await callServiceOrReturnError(`a-records/${payload.zoneName}`, "get"),
 );
 
 export const deleteARecordThunk = createAsyncThunk(
   "dns/deleteARecord",
-  async (payload) => {
-    return await callServiceOrReturnError(dnsService.deleteARecord, [
-      payload.zoneName,
-      payload.aName,
-    ]);
-  }
+  async (payload) =>
+    await callServiceOrReturnError(`a-record/${payload.zoneName}`, "delete", {
+      data: { aName: payload.aName },
+    }),
 );
 
 export const addARecordThunk = createAsyncThunk(
   "dns/addARecord",
-  async (payload) => {
-    return await callServiceOrReturnError(dnsService.addARecord, [
-      payload.zoneName,
-      payload.aName,
-      payload.ip,
-    ]);
-  }
+  async (payload) =>
+    await callServiceOrReturnError("a-record", "post", {
+      zoneName: payload.zoneName,
+      aName: payload.aName,
+      ip: payload.ip,
+    }),
 );
 
-export const addZoneThunk = createAsyncThunk("dns/addZone", async (payload) => {
-  return await callServiceOrReturnError(dnsService.addZone, [payload]);
-});
+export const addZoneThunk = createAsyncThunk(
+  "dns/addZone",
+  async (payload) => await callServiceOrReturnError("zone", "put", payload),
+);
 
 export const deleteZoneThunk = createAsyncThunk(
   "dns/deleteZone",
-  async (payload) => {
-    return await callServiceOrReturnError(dnsService.deleteZone, [
-      payload.zoneName,
-    ]);
-  }
+  async (payload) =>
+    await callServiceOrReturnError(`zone/${payload.zoneName}`, "delete"),
 );
 
-export const pingUrlThunk = createAsyncThunk("dns/pingUrl", async (payload) => {
-  return await callServiceOrReturnError(dnsService.pingUrl, [payload.url]);
-});
+export const pingUrlThunk = createAsyncThunk(
+  "dns/pingUrl",
+  async (payload) =>
+    await callServiceOrReturnError(`ping/${payload.url}`, "get"),
+);
 
 export const deployChangesThunk = createAsyncThunk(
   "dns/deployChanges",
-  async (payload) => {
-    return await callServiceOrReturnError(dnsService.deployChangesHandler, [
-      payload.serverPassword,
-    ]);
-  }
+  async (payload) =>
+    await callServiceOrReturnError("deploy-changes", "post", {
+      serverPassword: payload.serverPassword,
+    }),
 );
