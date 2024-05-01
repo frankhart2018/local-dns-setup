@@ -6,6 +6,7 @@ import {
   AddARecordPayload,
   AddZonePayload,
   DeleteARecordPayload,
+  DeleteZonePayload,
   DeployChangesPayload,
   GetARecordsPayload,
   PingUrlPayload,
@@ -76,7 +77,7 @@ export const addZoneThunk = createAsyncThunk(
 
 export const deleteZoneThunk = createAsyncThunk(
   "dns/deleteZone",
-  async (payload: DeleteARecordPayload) =>
+  async (payload: DeleteZonePayload) =>
     await callServiceOrReturnError(`zone/${payload.zoneName}`, axios.delete)
 );
 
